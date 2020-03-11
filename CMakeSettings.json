@@ -2,7 +2,7 @@
   "environments": [
     {
       "BuildDir": "${projectDir}\\out\\build",
-      "InstallDir": "${env.FLi_HOME}\\FLi3rdParty"
+      "InstallDir": "${projectDir}\\out\\install"
     }
   ],
   "configurations": [
