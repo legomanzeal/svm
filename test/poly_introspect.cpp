@@ -70,12 +70,19 @@ static const array_t ya = [] {
 } ();
 
 TEST_CASE("polynomial-introspect-scalar") {
-    auto introspector = svm::tensor_introspect<0>(model.classifier());
+    // https://xtensor.readthedocs.io/en/latest/compilers.html
+    // original code svm::model<kernel_t,double>::classifier_type
+    //auto introspector2 = svm::tensor_introspect <model_t::classifier_type, 0, model_t::kernel_type::Degree>(model.classifier());
+    //CHECK(introspector2.tensor() == doctest::Approx(0.25));
+
+     auto introspector = svm::tensor_introspector < model_t::classifier_type, 0, model_t::kernel_type::Degree>(model.classifier());
+   
     CHECK(introspector.tensor() == doctest::Approx(0.25));
 }
 
 TEST_CASE("polynomial-introspect-vector") {
-    auto introspector = svm::tensor_introspect<1>(model.classifier());
+    //auto introspector = svm::tensor_introspect<1>(model.classifier());
+    auto introspector = svm::tensor_introspector < model_t::classifier_type, 1, model_t::kernel_type::Degree>(model.classifier());
     array_t u = {0, 0, 0, 0};
     auto itX = xs.begin();
     auto itYA = ya.begin();
@@ -90,7 +97,8 @@ TEST_CASE("polynomial-introspect-vector") {
 }
 
 TEST_CASE("polynomial-introspect-matrix") {
-    auto introspector = svm::tensor_introspect<2>(model.classifier());
+    //auto introspector = svm::tensor_introspect<2>(model.classifier());
+    auto introspector = svm::tensor_introspector < model_t::classifier_type, 2, model_t::kernel_type::Degree>(model.classifier());
     std::array<array_t, 4> u {
         array_t {0, 0, 0, 0},
         array_t {0, 0, 0, 0},

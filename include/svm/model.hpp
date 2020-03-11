@@ -51,7 +51,7 @@ namespace svm {
 
         struct classifier_type {
 
-            using kernel_type = model::kernel_type;
+            // using kernel_type = model::kernel_type;
 
             struct const_iterator {
                 using support_vec_type = std::conditional_t<problem_t::is_precomputed,

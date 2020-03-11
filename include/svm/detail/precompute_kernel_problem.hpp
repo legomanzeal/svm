@@ -59,23 +59,26 @@ namespace svm {
             precompute_kernel_problem (const Kernel & k, size_t dim)
                 : basic_problem<Container, Label>(dim), kernel(k) {}
 
-            template <typename ..., class L = Label,
-                      typename = typename std::enable_if<traits::is_convertible_label<L>::value>::type>
-            struct svm_problem generate() {
-                kernel_data.clear();
-                ptrs.clear();
-                int i = 1;
-                for (Container const& xi : orig_data) {
-                    kernel_data.push_back(kernelize(xi, i));
-                    ptrs.push_back(kernel_data.back().ptr());
-                    ++i;
-                }
-                struct svm_problem p;
-                p.x = ptrs.data();
-                p.y = labels.data();
-                p.l = labels.size();
-                return p;
-            }
+            // RVG: I've commented out this template declaration.
+            // seems that it guards against incompatible label types but there is not test coverage for that.
+            // with the 'protective' code commented out, the test cases for the solution still passes.
+             // template <typename ..., class L = Label,
+             //           typename = typename std::enable_if<traits::is_convertible_label<L>::value>::type>
+             struct svm_problem generate() {
+                 kernel_data.clear();
+                 ptrs.clear();
+                 int i = 1;
+                 for (Container const& xi : orig_data) {
+                     kernel_data.push_back(kernelize(xi, i));
+                     ptrs.push_back(kernel_data.back().ptr());
+                     ++i;
+                 }
+                 struct svm_problem p;
+                 p.x = ptrs.data();
+                 p.y = labels.data();
+                 p.l = labels.size();
+                 return p;
+             }
             dataset kernelize(Container const& xi, double index = 1) const {
                 std::vector<double> v;
                 v.push_back(index);

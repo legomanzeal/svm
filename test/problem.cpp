@@ -29,6 +29,13 @@
 #include <utility>
 #include <vector>
 
+ // https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2012/4hwaceh6(v=vs.110)?redirectedfrom=MSDN
+// math. h is the deprecated C header. cmath is the C++ header. The difference is that cmath puts all the names in the std namespace
+// however cmath does not quite solve the problem for vs2019
+#define _USE_MATH_DEFINES // for C++
+#include <math.h>
+
+#include <iostream>
 #include <svm/label.hpp>
 #include <svm/model.hpp>
 #include <svm/parameters.hpp>
@@ -124,7 +131,7 @@ TEST_CASE("problem-map-binary-classification") {
 
     auto classifier = [] (cmplx c) -> binary_class::label {
         double angle = std::arg(c);
-        return (angle > 1. || angle < 1.-M_PI) ? binary_class::WHITE : binary_class::BLACK;
+        return (angle > 1. || angle < 1. -M_PI) ? binary_class::WHITE : binary_class::BLACK;
     };
 
     svm::problem<kernel_t, binary_class::label> mapped_problem(std::move(prob), classifier);

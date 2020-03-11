@@ -52,8 +52,11 @@ namespace svm {
             {
             }
 
-            template <typename ..., typename L = Label,
-                      typename = typename std::enable_if<traits::is_convertible_label<L>::value>::type>
+            // RVG: I've commented out this template declaration.
+            // seems that it guards against incompatible label types but there is not test coverage for that.
+            // with the 'protective' code commented out, the test cases for the solution still passes.
+            // template <typename ..., typename L = Label,
+            //           typename = typename std::enable_if<traits::is_convertible_label<L>::value>::type>
             struct svm_problem generate() {
                 ptrs.clear();
                 for (dataset & ds : orig_data)

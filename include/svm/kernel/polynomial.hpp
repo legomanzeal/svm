@@ -36,6 +36,12 @@
 
 #include <svm/libsvm/svm.h>
 
+/*
+extra info:
+http://openclassroom.stanford.edu/MainFolder/DocumentPage.php?course=MachineLearning&doc=exercises/ex8/ex8.html
+
+usage: RBF kernel to classify data that is not linearly separable
+*/
 
 namespace svm {
 
@@ -79,7 +85,7 @@ namespace svm {
     struct tensor_introspector {
         static_assert(K <= D, "invalid tensor rank");
 
-        tensor_introspector (Classifier const& cl)
+        tensor_introspector (const Classifier & cl)
             : classifier(cl)
         {
             using namespace combinatorics;
@@ -117,9 +123,14 @@ namespace svm {
         double fac;
     };
 
-    template <size_t K, class Classifier>
-    tensor_introspector<Classifier, K> tensor_introspect (Classifier const& cl) {
-        return tensor_introspector<Classifier, K> {cl};
+    template <class Classifier, size_t K, size_t D>
+    tensor_introspector<Classifier, K> tensor_introspect (const Classifier & cl) {
+        // return tensor_introspector<Classifier, K, D> {cl};
+        return tensor_introspector<Classifier, K, D> (cl);
     }
 
+    // template <size_t K, class Classifier>
+    // tensor_introspector<Classifier, K> tensor_introspect(Classifier const& cl) {8
+    //     return tensor_introspector<Classifier, K> {cl};
+    // }
 }

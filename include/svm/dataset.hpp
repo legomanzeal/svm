@@ -178,8 +178,22 @@ namespace svm {
         void nodify (OutputIterator begin, OutputIterator end, bool skip_zeros) {
             for (int i = start_index; begin != end; ++i, ++begin)
                 if (!skip_zeros || *begin != 0)
-                    data_.push_back({ .index = i, .value = static_cast<double>(*begin) });
-            data_.push_back({ .index = -1, .value = {} });
+                {
+                    // data_.push_back({ .index = i, .value = static_cast<double>(*begin) });
+                    {
+                        svm_node dummy;
+                        dummy.index = i;
+                        dummy.value = static_cast<double>(*begin);
+                        data_.push_back(dummy);
+                    }
+                }
+            //data_.push_back({ .index = -1, .value = {} });
+            {
+                svm_node dummy;
+                dummy.index = -1;
+                dummy.value = {};
+                data_.push_back(dummy);
+            }
         }
 
         std::vector<struct svm_node> data_;

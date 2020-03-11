@@ -29,6 +29,13 @@
 #include <type_traits>
 #include <vector>
 
+ // https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2012/4hwaceh6(v=vs.110)?redirectedfrom=MSDN
+// math. h is the deprecated C header. cmath is the C++ header. The difference is that cmath puts all the names in the std namespace
+// however cmath does not quite solve the problem for vs2019
+#define _USE_MATH_DEFINES // for C++
+#include <math.h>
+// #include <cmath> // does not work in VS 2019
+
 #include <svm/label.hpp>
 #include <svm/model.hpp>
 #include <svm/parameters.hpp>
@@ -52,7 +59,8 @@ SVM_LABEL_ADD(SOUTH_WEST)
 SVM_LABEL_ADD(SOUTH_EAST)
 SVM_LABEL_END()
 
-static_assert(!svm::traits::is_dynamic_label<quadrants::label>::value);
+
+static_assert(!svm::traits::is_dynamic_label<quadrants::label>::value, "!svm::traits::is_dynamic_label<quadrants::label>::value");
 
 TEST_CASE("static-binary-class") {
     using label_t = directions::label;
@@ -92,7 +100,7 @@ TEST_CASE("static-binary-class") {
     std::sort(all_labels.begin(), all_labels.end());
 
     auto labels = model1.labels();
-    static_assert(std::is_same<decltype(labels), std::array<label_t, N>>::value);
+    static_assert(std::is_same<decltype(labels), std::array<label_t, N>>::value, "std::is_same<decltype(labels), std::array<label_t, N>>::value");
     CHECK(std::equal(all_labels.begin(), all_labels.end(), labels.begin()));
     labels = model2.labels();
     CHECK(std::equal(all_labels.begin(), all_labels.end(), labels.begin()));
@@ -122,8 +130,7 @@ TEST_CASE("static-binary-class") {
         C c {uniform(rng), uniform(rng)};
         auto res1 = model1(c);
         auto res2 = model2(c);
-        static_assert(std::is_same<decltype(res1.second),
-                                   double>::value);
+        static_assert(std::is_same<decltype(res1.second), double>::value, "std::is_same<decltype(res1.second), double > ::value");
         auto cres1 = classifier1(c);
         auto cres2 = classifier2(c);
         CHECK(res1.first == cres1.first);
@@ -156,7 +163,7 @@ TEST_CASE("static-binary-class") {
 
     auto rho1 = model1.rho();
     auto rho2 = model2.rho();
-    static_assert(std::is_same<decltype(rho1), double>::value);
+    static_assert(std::is_same<decltype(rho1), double>::value, "std::is_same<decltype(rho1), double>::value");
     CHECK(rho1 == model1.classifier().rho());
     CHECK(rho2 == model2.classifier().rho());
     CHECK(rho1 == -rho2);
@@ -203,12 +210,11 @@ TEST_CASE("static-multi-class") {
     std::sort(all_labels.begin(), all_labels.end());
 
     auto labels = model.labels();
-    static_assert(std::is_same<decltype(labels), std::array<label_t, N>>::value);
+    static_assert(std::is_same<decltype(labels), std::array<label_t, N>>::value, "std::is_same<decltype(labels), std::array<label_t, N>>::value");
     CHECK(std::equal(all_labels.begin(), all_labels.end(), labels.begin()));
 
     auto classifiers = model.classifiers();
-    static_assert(std::is_same<decltype(classifiers),
-                               std::array<model_t::classifier_type, NC>>::value);
+    static_assert(std::is_same<decltype(classifiers), std::array<model_t::classifier_type, NC>>::value, "std::is_same<decltype(classifiers), std::array<model_t::classifier_type, NC>>::value");
     auto check_consistency = [&] (size_t c, size_t i, size_t j) {
         CHECK(classifiers[c].labels().first  == labels[i]);
         CHECK(classifiers[c].labels().second == labels[j]);
@@ -230,8 +236,7 @@ TEST_CASE("static-multi-class") {
     for (size_t i = 0; i < 25; ++i) {
         C c {uniform(rng), uniform(rng)};
         auto res = model(c);
-        static_assert(std::is_same<decltype(res.second),
-                                   std::array<double, NC>>::value);
+        static_assert(std::is_same<decltype(res.second), std::array<double, NC>>::value, "std::is_same<decltype(res.second), std::array<double, NC>>::value");
         for (size_t i = 0; i < nr_classifiers; ++i) {
             auto cres = classifiers[i](c);
             CHECK(res.first == cres.first);
@@ -248,7 +253,7 @@ TEST_CASE("static-multi-class") {
     }
 
     auto rhos = model.rho();
-    static_assert(std::is_same<decltype(rhos), std::array<double, NC>>::value);
+    static_assert(std::is_same<decltype(rhos), std::array<double, NC>>::value, "std::is_same<decltype(rhos), std::array<double, NC>>::value");
     for (size_t i = 0; i < nr_classifiers; ++i) {
         double crho = classifiers[i].rho();
         CHECK(rhos[i] == crho);
@@ -276,7 +281,7 @@ private:
     double val;
 };
 
-static_assert(svm::traits::is_dynamic_label<dynamic_label>::value);
+static_assert(svm::traits::is_dynamic_label<dynamic_label>::value, "svm::traits::is_dynamic_label<dynamic_label>::value");
 
 TEST_CASE("dynamic-multi-class") {
     using label_t = dynamic_label;
@@ -310,18 +315,17 @@ TEST_CASE("dynamic-multi-class") {
     std::iota(all_labels.begin(), all_labels.end(), std::floor(-0.5 * N));
 
     auto labels = model.labels();
-    static_assert(std::is_same<decltype(labels), std::vector<label_t>>::value);
+    static_assert(std::is_same<decltype(labels), std::vector<label_t>>::value, "std::is_same<decltype(labels), std::vector<label_t>>::value");
     CHECK(std::equal(all_labels.begin(), all_labels.end(), labels.begin()));
 
     auto classifiers = model.classifiers();
-    static_assert(std::is_same<decltype(classifiers),
-                               std::vector<model_t::classifier_type>>::value);
+    static_assert(std::is_same<decltype(classifiers), std::vector<model_t::classifier_type>>::value, "std::is_same<decltype(classifiers), std::vector<model_t::classifier_type>>::value");
     CHECK(classifiers.size() == nr_classifiers);
 
     for (size_t i = 0; i < 25; ++i) {
         C c {uniform(rng), uniform(rng)};
         auto res = model(c);
-        static_assert(std::is_same<decltype(res.second), std::vector<double>>::value);
+        static_assert(std::is_same<decltype(res.second), std::vector<double>>::value, "std::is_same<decltype(res.second), std::vector<double>>::value");
         CHECK(res.second.size() == nr_classifiers);
         for (size_t i = 0; i < nr_classifiers; ++i) {
             auto cres = classifiers[i](c);
@@ -339,7 +343,7 @@ TEST_CASE("dynamic-multi-class") {
     }
 
     auto rhos = model.rho();
-    static_assert(std::is_same<decltype(rhos), std::vector<double>>::value);
+    static_assert(std::is_same<decltype(rhos), std::vector<double>>::value, "std::is_same<decltype(rhos), std::vector<double>>::value");
     CHECK(rhos.size() == nr_classifiers);
     for (size_t i = 0; i < nr_classifiers; ++i) {
         double crho = classifiers[i].rho();
