@@ -1,0 +1,106 @@
+﻿{
+  "environments": [
+    {
+      "BuildDir": "${projectDir}\\out\\build",
+      "InstallDir": "${env.FLi_HOME}\\FLi3rdParty"
+    }
+  ],
+  "configurations": [
+    {
+      "name": "x86-Debug",
+      "generator": "Visual Studio 14 2015",
+      "configurationType": "Debug",
+      "buildRoot": "${env.BuildDir}\\${name}",
+      "installRoot": "${env.InstallDir}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "msvc_x86" ],
+      "variables": [
+        {
+          "name": "CMAKE_DEBUG_POSTFIX",
+          "value": "_D",
+          "type": "STRING"
+        },
+        {
+          "name": "PDB_POSTFIX",
+          "value": "_D",
+          "type": "STRING"
+        }
+      ],
+      "intelliSenseMode": "windows-msvc-x86"
+    },
+    {
+      "name": "x86-Release",
+      "generator": "Visual Studio 14 2015",
+      "configurationType": "RelWithDebInfo",
+      "buildRoot": "${env.BuildDir}\\${name}",
+      "installRoot": "${env.InstallDir}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "msvc_x86" ],
+      "variables": [
+        {
+          "name": "CMAKE_RELWITHDEBINFO_POSTFIX",
+          "value": "",
+          "type": "STRING"
+        },
+        {
+          "name": "PDB_POSTFIX",
+          "value": "",
+          "type": "STRING"
+        }
+      ],
+      "intelliSenseMode": "windows-msvc-x86"
+    },
+    {
+      "name": "x64-Debug",
+      "generator": "Visual Studio 14 2015 Win64",
+      "configurationType": "Debug",
+      "buildRoot": "${env.BuildDir}\\${name}",
+      "installRoot": "${env.InstallDir}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "variables": [
+        {
+          "name": "CMAKE_DEBUG_POSTFIX",
+          "value": "_x64_D",
+          "type": "STRING"
+        },
+        {
+          "name": "PDB_POSTFIX",
+          "value": "_x64_D",
+          "type": "STRING"
+        }
+      ],
+      "intelliSenseMode": "windows-msvc-x64"
+    },
+    {
+      "name": "x64-Release",
+      "generator": "Visual Studio 14 2015 Win64",
+      "configurationType": "RelWithDebInfo",
+      "buildRoot": "${env.BuildDir}\\${name}",
+      "installRoot": "${env.InstallDir}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "variables": [
+        {
+          "name": "CMAKE_RELWITHDEBINFO_POSTFIX",
+          "value": "_x64",
+          "type": "STRING"
+        },
+        {
+          "name": "PDB_POSTFIX",
+          "value": "_x64",
+          "type": "STRING"
+        }
+      ],
+      "intelliSenseMode": "windows-msvc-x64"
+    }
+  ]
+}
